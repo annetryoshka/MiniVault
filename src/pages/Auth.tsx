@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { API_URL } from "@/integrations/supabase/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Shield, Eye, EyeOff, Loader2 } from "lucide-react";
+import { se } from "date-fns/locale";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -40,26 +41,60 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          if (error.message.includes("Invalid login")) toast.error("Credenciales inválidas");
-          else if (error.message.includes("Email not confirmed")) toast.error("Confirma tu email antes de iniciar sesión");
-          else toast.error(error.message);
-        }
-      } else {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: { full_name: name },
-          },
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
         });
-        if (error) {
-          toast.error(error.message);
-        } else {
-          toast.success("¡Cuenta creada! Iniciando sesión...");
+        const data = await response.json();
+
+        if (!response.ok) {
+          toast.error(data.message || "Credenciales inválidas");
+          return;
+        } 
+
+        localStorage.setItem("token", data.token);
+        toast.success("¡Inicio de sesión exitoso!");
+        window.location.href = "/dashboard";
+
+      }else {
+
+        const response = await fetch(`${API_URL}/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          toast.error(data.message || "Error al crear la cuenta");
+          return;
         }
+
+        const loginResponse = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const loginData = await loginResponse.json();
+
+      if (!loginResponse.ok) {
+        toast.error(loginData.message || "Error al iniciar sesión después del registro");
+        return;
+      }
+
+      localStorage.setItem("token", loginData.token);
+      toast.success("¡Cuenta creada e inicio de sesión exitosos!");
+
+      setIsLogin(true);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      window.location.href = "/dashboard";
+
       }
     } catch {
       toast.error("Error de conexión. Intenta de nuevo.");
@@ -171,7 +206,7 @@ const Auth = () => {
             <div className="mt-6 text-center">
               <button
                 type="button"
-                onClick={() => { setIsLogin(!isLogin); setErrors({}); }}
+                onClick={() => { setIsLogin(!isLogin); setErrors({}); setName(""), setEmail(""), setPassword(""), setConfirmPassword("")}}
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 {isLogin ? "¿No tienes cuenta? Crear una" : "¿Ya tienes cuenta? Inicia sesión"}

@@ -11,6 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
+#api
+api/node_modules
+api/.env
 
 .vscode/*
 !.vscode/extensions.json

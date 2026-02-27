@@ -12,30 +12,33 @@ agenda digital.
 - Supabase
  
 # Estructura del frontend
+```
 MINIVAULT/
-│
-├── src/
-│ ├── components/ # Componentes reutilizables
-│ ├── hooks/ # Custom hooks
-│ ├── integrations/ # Conexión con la api
-│ ├── lib/ # Utilidades y helpers
-│ ├── pages/ # Páginas principales
-│ ├── test/ # Tests
-│ │
-│ ├── App.tsx
-│ ├── main.tsx
-│ ├── App.css
-│ ├── index.css
-│ └── vite-env.d.ts
-│
-├── supabase/ # Configuración Supabase
-├── .env # Variables de entorno
-├── tailwind.config.ts # Configuración Tailwind
-├── postcss.config.js
-├── eslint.config.js
-├── tsconfig.app.json
-├── index.html
-└── package.json
+
+    src/
+
+        components/        # Componentes reutilizables
+        hooks/             # Custom hooks
+        integrations/      # Conexión con la api
+        lib/               # Utilidades y helpers
+        pages/             # Páginas principales
+        test/              # Tests
+
+        App.tsx
+        main.tsx
+        App.css
+        index.css
+        vite-env.d.ts
+
+    supabase/              # Configuración Supabase
+    .env                   # Variables de entorno
+    tailwind.config.ts     # Configuración Tailwind
+    postcss.config.js
+    eslint.config.js
+    tsconfig.app.json
+    index.html
+    package.json
+```
 
 # Backend API
 
@@ -58,19 +61,22 @@ Tablas:
 
 # Estructura del backend
 
+```
 backend/
-│
-├── src/
-│ ├── config/ # Configuraciones 
-│ ├── controllers/ 
-│ ├── middlewares/ 
-│ └── route/ # Definición de rutas
-│
-├── .env.example # Ejemplo de variables de entorno
-├── package.json 
-├── package-lock.json
-├── server.js # Punto de entrada del servidor
-└── README.md
+
+    src/
+
+        config/         # Configuraciones
+        controllers/
+        middlewares/
+        route/          # Definición de rutas
+
+    .env.example        # Ejemplo de variables de entorno
+    package.json
+    package-lock.json
+    server.js           # Punto de entrada del servidor
+    README.md
+```
 
 # Run
 npm install
